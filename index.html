@@ -2,62 +2,179 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduQuest - Totem IFPB</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>EduQuest IFPB</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="app-container">
-        
-        <div id="screensaver-screen" class="screen">
-            <div id="screensaver-content">
-                </div>
-            <div class="insert-coin-text">PRESSIONE ENTER PARA INICIAR</div>
-        </div>
+<div id="app">
+    <canvas id="game-canvas" width="1080" height="1920"></canvas>
+    <div id="vinheta"></div>
 
-        <div id="menu-screen" class="screen hidden">
-            <h1>EduQuest IFPB</h1>
-            <p>Identifique-se para jogar</p>
-            <div class="form-group" style="margin-top: 50px;">
-                <label style="font-size: 2rem; text-align: center;">Sua Matrícula:</label>
-                <input type="text" id="reg-matricula" placeholder="Digite no Teclado Numérico" style="font-size: 2rem; text-align: center; padding: 30px;">
-                <div id="err-matricula" class="error-text hidden" style="font-size: 1.5rem; text-align: center; margin-top: 15px; color: red;">Campo obrigatório</div>
+    <!-- ===================== HUD ===================== -->
+    <div id="hud" class="oculto">
+        <div class="hud-card px">
+            <div class="hud-avatar"><img id="hud-avatar" alt=""></div>
+            <div class="hud-info">
+                <div id="hud-nome">Aluno</div>
+                <div id="hud-titulo">Calouro</div>
+                <div class="barra-xp"><div id="hud-xp-barra"></div><span id="hud-xp-texto">0 / 100 XP</span></div>
             </div>
-            <p class="controls-tip mt-2">Pressione ENTER após digitar</p>
+            <div class="hud-nivel"><span>NÍVEL</span><b id="hud-nivel">1</b></div>
         </div>
-
-        <div id="game-screen" class="screen hidden" style="padding: 0;">
-            <div id="hud">
-                <span id="hud-name"></span>
-                <span id="hud-level"></span>
-                <span id="hud-xp"></span>
-                <span id="hud-daily">Hoje: 0/2</span>
-            </div>
-            <canvas id="game-canvas" width="1080" height="1920"></canvas>
-            <p class="controls-tip">Numpad: 8(Cima), 2(Baixo), 4(Esq), 6(Dir) | 0(Sair)</p>
+        <div class="hud-card hud-hoje px">
+            <span>DESAFIOS<br>DE HOJE</span>
+            <div id="hud-hoje"></div>
         </div>
-
-        <div id="battle-screen" class="screen hidden">
-            <div class="battle-header">
-                <h2 id="battle-title" style="font-size: 3rem;">Desafio!</h2>
-                <div class="battle-stats" style="font-size: 2rem;">
-                    Nível: <span id="q-diff"></span> | Tempo: <span id="q-timer">0</span>s
-                </div>
-            </div>
-            <div class="question-box" id="question-text" style="font-size: 2.5rem;">Carregando...</div>
-            <div class="options-grid" id="options-container"></div>
-        </div>
-
-        <div id="feedback-modal" class="screen hidden">
-            <div class="feedback-content">
-                <h1 id="feedback-title" style="font-size: 4rem;">Resultado</h1>
-                <p id="feedback-msg" style="font-size: 2.5rem;">Mensagem...</p>
-                <div class="explanation-box" id="feedback-explanation" style="font-size: 2rem;">Explicação...</div>
-                <p class="controls-tip mt-2 insert-coin-text" style="font-size: 2.5rem;">Pressione ENTER para Continuar</p>
-            </div>
-        </div>
-
     </div>
-    <script src="script.js"></script>
+    <div id="local-banner"><span id="local-nome"></span></div>
+    <div id="dica" class="oculto">
+        <span><kbd>8</kbd><kbd>4</kbd><kbd>6</kbd><kbd>2</kbd> andar</span>
+        <span><kbd>5</kbd> ou <kbd class="largo">ENTER</kbd> conversar</span>
+        <span><kbd>0</kbd> sair</span>
+    </div>
+
+    <!-- ===================== MODO ANÚNCIO ===================== -->
+    <div id="tela-anuncios" class="tela">
+        <div class="logo">
+            <div class="logo-titulo"><span>EDU</span><span>QUEST</span></div>
+            <div class="logo-sub"><b>IFPB</b> o jogo educativo do campus</div>
+        </div>
+        <div class="slide-moldura px"><div id="slide"></div></div>
+        <div id="slide-pontos"></div>
+        <div class="aperte">PRESSIONE <kbd class="largo">ENTER</kbd> PARA JOGAR</div>
+    </div>
+
+    <!-- ===================== LOGIN ===================== -->
+    <div id="tela-login" class="tela oculto">
+        <div class="painel px">
+            <div class="painel-icone">🎓</div>
+            <h2>IDENTIFIQUE-SE</h2>
+            <p>Digite sua <b>matrícula</b> no teclado numérico</p>
+            <div id="matricula-display"></div>
+            <div id="login-msg">&nbsp;</div>
+            <div class="legenda">
+                <span><kbd class="largo">ENTER</kbd> confirmar</span>
+                <span><kbd>.</kbd> apagar</span>
+                <span><kbd>-</kbd> voltar</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== ESCOLHA DE PERSONAGEM ===================== -->
+    <div id="tela-avatar" class="tela oculto">
+        <div class="painel px">
+            <h2>ESCOLHA SEU<br>PERSONAGEM</h2>
+            <div class="avatar-palco">
+                <span class="seta"><kbd>4</kbd>◀</span>
+                <div class="avatar-pedestal"><img id="avatar-img" alt=""></div>
+                <span class="seta">▶<kbd>6</kbd></span>
+            </div>
+            <div id="avatar-num">1 / 12</div>
+            <div id="avatar-lista"></div>
+            <div class="legenda"><span><kbd class="largo">ENTER</kbd> é esse!</span></div>
+        </div>
+    </div>
+
+    <!-- ===================== DIÁLOGO ===================== -->
+    <div id="dialogo" class="oculto">
+        <div class="dialogo-caixa px">
+            <div class="dialogo-retrato" id="dialogo-retrato"><img id="dialogo-img" alt=""></div>
+            <div class="dialogo-corpo">
+                <div id="dialogo-nome"></div>
+                <div id="dialogo-texto"></div>
+                <div id="dialogo-opcoes"></div>
+            </div>
+            <div class="dialogo-seta" id="dialogo-seta">▼</div>
+        </div>
+    </div>
+
+    <!-- ===================== DESAFIO ===================== -->
+    <div id="tela-desafio" class="tela oculto">
+        <div class="desafio-topo px">
+            <div class="desafio-retrato"><img id="desafio-img" alt=""></div>
+            <div class="desafio-info">
+                <div id="desafio-prof">Prof.</div>
+                <div id="desafio-materia" class="chip">Matéria</div>
+                <div id="desafio-dif"></div>
+            </div>
+            <div class="desafio-xp"><span>VALE</span><b id="desafio-valor">60</b><span>XP</span></div>
+        </div>
+        <div class="tempo px"><div id="tempo-barra"></div><span id="tempo-num">60</span></div>
+        <div id="pergunta" class="px"></div>
+        <div id="opcoes"></div>
+
+        <div id="resultado" class="oculto">
+            <div class="resultado-caixa px">
+                <div id="resultado-titulo">ACERTOU!</div>
+                <div id="resultado-xp"></div>
+                <div id="resultado-exp"></div>
+                <div class="aperte pequeno">PRESSIONE <kbd class="largo">ENTER</kbd></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== SUBIU DE NÍVEL ===================== -->
+    <div id="tela-nivel" class="tela oculto">
+        <div id="confete"></div>
+        <div class="nivel-caixa">
+            <div class="nivel-topo">SUBIU DE NÍVEL!</div>
+            <div class="nivel-numero" id="nivel-numero">2</div>
+            <div class="nivel-titulo" id="nivel-titulo">Aprendiz</div>
+            <div class="aperte pequeno">PRESSIONE <kbd class="largo">ENTER</kbd></div>
+        </div>
+    </div>
+
+    <!-- ===================== RESUMO DO DIA ===================== -->
+    <div id="tela-resumo" class="tela oculto">
+        <div class="painel px">
+            <h2 id="resumo-titulo">ATÉ AMANHÃ!</h2>
+            <div class="resumo-avatar"><img id="resumo-img" alt=""></div>
+            <div id="resumo-nome"></div>
+            <div id="resumo-stats"></div>
+            <div id="resumo-msg"></div>
+            <div class="aperte pequeno">PRESSIONE <kbd class="largo">ENTER</kbd></div>
+        </div>
+    </div>
+
+    <!-- ===================== AVISOS ===================== -->
+    <div id="modal" class="oculto">
+        <div class="painel px">
+            <h2 id="modal-titulo"></h2>
+            <p id="modal-texto"></p>
+            <div class="legenda" id="modal-teclas"></div>
+        </div>
+    </div>
+
+    <div id="fade"></div>
+    <div id="teclado-virtual" class="oculto"></div>
+</div>
+
+<div id="admin" class="oculto"></div>
+
+<script src="js/config.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/tiles.js"></script>
+<script src="data/professores.js"></script>
+<script src="data/anuncios.js"></script>
+<script src="js/maps.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/questions.js"></script>
+<script src="data/perguntas/matematica.js"></script>
+<script src="data/perguntas/portugues.js"></script>
+<script src="data/perguntas/ingles.js"></script>
+<script src="data/perguntas/filosofia.js"></script>
+<script src="data/perguntas/sociologia.js"></script>
+<script src="data/perguntas/biologia.js"></script>
+<script src="data/perguntas/fisica.js"></script>
+<script src="data/perguntas/edfisica.js"></script>
+<script src="data/perguntas/geografia.js"></script>
+<script src="data/perguntas/historia.js"></script>
+<script src="data/perguntas/artes.js"></script>
+<script src="js/world.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+<script src="js/admin.js"></script>
 </body>
 </html>
