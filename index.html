@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuest - Totem IFPB</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        
+        <div id="screensaver-screen" class="screen">
+            <div id="screensaver-content">
+                </div>
+            <div class="insert-coin-text">PRESSIONE ENTER PARA INICIAR</div>
+        </div>
+
+        <div id="menu-screen" class="screen hidden">
+            <h1>EduQuest IFPB</h1>
+            <p>Identifique-se para jogar</p>
+            <div class="form-group" style="margin-top: 50px;">
+                <label style="font-size: 2rem; text-align: center;">Sua Matrícula:</label>
+                <input type="text" id="reg-matricula" placeholder="Digite no Teclado Numérico" style="font-size: 2rem; text-align: center; padding: 30px;">
+                <div id="err-matricula" class="error-text hidden" style="font-size: 1.5rem; text-align: center; margin-top: 15px; color: red;">Campo obrigatório</div>
+            </div>
+            <p class="controls-tip mt-2">Pressione ENTER após digitar</p>
+        </div>
+
+        <div id="game-screen" class="screen hidden" style="padding: 0;">
+            <div id="hud">
+                <span id="hud-name"></span>
+                <span id="hud-level"></span>
+                <span id="hud-xp"></span>
+                <span id="hud-daily">Hoje: 0/2</span>
+            </div>
+            <canvas id="game-canvas" width="1080" height="1920"></canvas>
+            <p class="controls-tip">Numpad: 8(Cima), 2(Baixo), 4(Esq), 6(Dir) | 0(Sair)</p>
+        </div>
+
+        <div id="battle-screen" class="screen hidden">
+            <div class="battle-header">
+                <h2 id="battle-title" style="font-size: 3rem;">Desafio!</h2>
+                <div class="battle-stats" style="font-size: 2rem;">
+                    Nível: <span id="q-diff"></span> | Tempo: <span id="q-timer">0</span>s
+                </div>
+            </div>
+            <div class="question-box" id="question-text" style="font-size: 2.5rem;">Carregando...</div>
+            <div class="options-grid" id="options-container"></div>
+        </div>
+
+        <div id="feedback-modal" class="screen hidden">
+            <div class="feedback-content">
+                <h1 id="feedback-title" style="font-size: 4rem;">Resultado</h1>
+                <p id="feedback-msg" style="font-size: 2.5rem;">Mensagem...</p>
+                <div class="explanation-box" id="feedback-explanation" style="font-size: 2rem;">Explicação...</div>
+                <p class="controls-tip mt-2 insert-coin-text" style="font-size: 2.5rem;">Pressione ENTER para Continuar</p>
+            </div>
+        </div>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
