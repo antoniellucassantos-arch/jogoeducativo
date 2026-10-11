@@ -13,7 +13,7 @@ const CONFIG_PADRAO = {
     // Segundos para responder cada pergunta (0 = sem limite)
     tempoPergunta: 60,
 
-    // Rotação da tela: 'auto' gira -90° quando a janela está deitada (monitor do totem),
+    // Rotação da tela: 'auto' gira -90° quando o jogo é aberto do arquivo (totem) e a janela está deitada,
     // ou use -90, 90 ou 0 para forçar. Também dá para testar com index.html?rot=0
     rotacao: 'auto',
 

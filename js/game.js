@@ -46,9 +46,11 @@ const Jogo = {
         this.irAnuncios();
         let ultimo = performance.now();
         const loop = t => {
-            const dt = Math.min(0.05, (t - ultimo) / 1000); ultimo = t;
-            this.atualizar(dt);
+            // agenda o próximo quadro antes de tudo: se algo der erro, o jogo não congela
             requestAnimationFrame(loop);
+            // o primeiro quadro pode vir com tempo menor que o anterior (dt negativo)
+            const dt = Math.max(0, Math.min(0.05, (t - ultimo) / 1000)); ultimo = t;
+            try { this.atualizar(dt); } catch (e) { console.error(e); }
         };
         requestAnimationFrame(loop);
     },
@@ -526,6 +528,7 @@ const Jogo = {
     ligarToque() {
         const params = new URLSearchParams(location.search);
         this.toque = params.has('teclado') || window.matchMedia('(pointer: coarse)').matches;
+        document.getElementById('app').classList.toggle('toque', this.toque);
         const tv = $('teclado-virtual');
         const teclas = [['7'], ['8', 'seta'], ['9'], ['-', '', 'NumpadSubtract'], ['4', 'seta'], ['5'], ['6', 'seta'], ['.', '', 'NumpadDecimal'],
             ['1'], ['2', 'seta'], ['3'], ['ENTER', 'enter', 'NumpadEnter'], ['0', 'zero']];
@@ -556,7 +559,9 @@ const Jogo = {
 function ajustarTela() {
     const params = new URLSearchParams(location.search);
     let rot = params.has('rot') ? +params.get('rot') : CONFIG.rotacao;
-    if (rot === 'auto') rot = window.innerWidth > window.innerHeight ? -90 : 0;
+    // 'auto': só gira no totem (arquivo aberto direto, file://) com a tela deitada.
+    // Pelo site (GitHub Pages) fica em pé, para dar para testar no PC e no celular.
+    if (rot === 'auto') rot = (location.protocol === 'file:' && window.innerWidth > window.innerHeight) ? -90 : 0;
     rot = +rot || 0;
     const deitado = Math.abs(rot) === 90;
     const w = deitado ? 1920 : 1080, h = deitado ? 1080 : 1920;

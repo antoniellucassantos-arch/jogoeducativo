@@ -21,7 +21,7 @@ const LOOKS_ALUNOS = (() => {
             pele: peles[Math.floor(hash(i, 2, 4) * peles.length)], cabelo: c,
             corCabelo: corCab[Math.floor(hash(i, 3, 4) * corCab.length)],
             roupa: 'camisa', corRoupa: camisas[i % camisas.length], corRoupa2: '#ffffff',
-            corCalca: calcas[i % calcas.length], acessorios: hash(i, 5, 4) > 0.8 ? ['bone'] : [],
+            corCalca: calcas[i % calcas.length], aluno: true, acessorios: hash(i, 5, 4) > 0.8 ? ['bone'] : [],
         });
     }
     return lista;
@@ -294,10 +294,10 @@ const Mundo = {
 
         // objetos e personagens em ordem de profundidade
         const lista = [
-            ...this.mapa.objetos.map(o => ({ y: o.ordem, d: () => ctx.drawImage(o.imgs[Math.floor(this.t * 5) % o.imgs.length], o.x, o.y) })),
+            ...this.mapa.objetos.map(o => ({ y: o.ordem, d: () => ctx.drawImage(o.imgs[Math.abs(Math.floor(this.t * 5)) % o.imgs.length] || o.imgs[0], o.x, o.y) })),
             ...pessoas.map(p => ({ y: p.y, d: () => p.desenhar(ctx) })),
         ].sort((a, b) => a.y - b.y);
-        lista.forEach(i => i.d());
+        lista.forEach(i => { try { i.d(); } catch (e) { console.error(e); } });
 
         // partículas
         this.particulas.forEach(p => {

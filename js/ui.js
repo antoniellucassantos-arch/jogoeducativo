@@ -20,7 +20,7 @@ const AVATARES = [
     { genero: 'm', pele: '#a8714d', cabelo: 'espetado', corCabelo: '#4b3527', roupa: 'esporte', corRoupa: '#2f9e41', corRoupa2: '#ffffff', corCalca: '#1f3b2a' },
     { genero: 'f', pele: '#f1c8a5', cabelo: 'curto', corCabelo: '#1c1410', roupa: 'camisa', corRoupa: '#2f9e41', corRoupa2: '#ffffff', corCalca: '#26324d', oculos: true },
 ];
-AVATARES.forEach(a => { if (a.corBone) a.corRoupa2 = a.corBone; });
+AVATARES.forEach(a => { a.aluno = true; if (a.corBone) a.corRoupa2 = a.corBone; });
 
 const UI = {
     mostrar(...ids) { ids.forEach(id => $(id).classList.remove('oculto')); },

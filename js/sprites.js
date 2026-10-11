@@ -94,7 +94,8 @@ const Sprites = {
             for (let f = 0; f < 3; f++) {
                 let g = new Grid(16, 24);
                 const view = dir === 'left' ? 'right' : dir;
-                desenharPersonagem(g, look, view, f);
+                if (look.aluno) Aluno.mapa(g, look, view, f);
+                else desenharPersonagem(g, look, view, f);
                 if (dir === 'left') g = g.mirrored();
                 g = g.padded(1).outline();
                 g.drawTo(ctx, f * SPRITE_W, r * SPRITE_H);
@@ -109,7 +110,8 @@ const Sprites = {
         const key = 'r' + JSON.stringify(look);
         if (this.cache.has(key)) return this.cache.get(key);
         const g = new Grid(32, 32);
-        desenharRetrato(g, look);
+        if (look.aluno) Aluno.retrato(g, look);
+        else desenharRetrato(g, look);
         const c = g.padded(1).outline().toCanvas();
         this.cache.set(key, c);
         return c;

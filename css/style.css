@@ -335,3 +335,10 @@ p b { color: var(--texto); }
 #admin .anuncios { display: flex; flex-wrap: wrap; gap: 16px; }
 #admin figure { margin: 0; width: 170px; text-align: center; }
 #admin figure img { width: 170px; height: 220px; object-fit: contain; background: #e3e6ef; border-radius: 6px; }
+
+/* celular: telas de login/personagem sobem e o teclado fica centralizado embaixo */
+#app.com-teclado #tela-login, #app.com-teclado #tela-avatar { justify-content: flex-start; padding-top: 110px; }
+#app.com-teclado #tela-login .legenda, #app.com-teclado #tela-avatar .legenda { display: none; }
+#app.com-teclado[data-estado="LOGIN"] #teclado-virtual, #app.com-teclado[data-estado="AVATAR"] #teclado-virtual { right: 50%; transform: translateX(50%); bottom: 90px; }
+#app.toque .so-teclado { display: none; }
+#app:not(.toque) .so-toque { display: none; }

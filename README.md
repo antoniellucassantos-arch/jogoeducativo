@@ -15,7 +15,7 @@ No totem, o ideal é abrir em tela cheia (modo quiosque):
 chrome.exe --kiosk --autoplay-policy=no-user-gesture-required "file:///C:/caminho/jogoeducativo/index.html"
 ```
 
-- A tela gira sozinha quando o monitor está deitado. Se ficar de cabeça para baixo, mude `rotacao` em
+- Aberto pelo arquivo (`file://`) com o monitor deitado, a tela gira sozinha. Pelo site (GitHub Pages) ela fica em pé. Se ficar de cabeça para baixo, mude `rotacao` em
   `js/config.js` (ou na aba **Configurações** do painel) para `90`.
 - Para testar no computador sem girar: `index.html?rot=0`
 - Para testar com teclado na tela (celular): `index.html?rot=0&teclado`
